@@ -1,7 +1,7 @@
 # ME1
 ## Repositorio de cursada
 
-![image](https://user-images.githubusercontent.com/21143386/117077606-d0d99580-ad0e-11eb-90d3-a5ffbaa42e28.png)
+<img src="https://www.frba.utn.edu.ar/wp-content/uploads/2016/08/logo-utn.ba-horizontal-e1471367724904.jpg" alt="UTN FRBA" width="500"/>
 
 * ***Alumno***: *Francisco Guillermo Stahl*
 * ***Correo***: fsthal@frba.utn.edu.ar
