@@ -2,9 +2,9 @@
 
 ## Repositorio del TP#1
 
-## Acceso rapido de la carpeta
+## Acceso a los ejercicios con nbviewer
 
-* [Ejericio 1](/TP/TP1/Ej_1.ipynb)
+* [Ejericio 1](https://nbviewer.jupyter.org/github/fgs222/ME1/blob/main/TP/TP1/Ej_1.ipynb)
 
 * [Ejericio 2](/TP/TP1/Ej_2.ipynb)
 
