@@ -1,4 +1,4 @@
-# Guia 01
+# Guia 1
 
 ## Acceso a los ejercicios con nbviewer
 
