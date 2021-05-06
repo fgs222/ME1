@@ -1,6 +1,6 @@
 # Guia 1
 
-## Acceso a los ejercicios con nbviewer
+## Visualizacion de los ejercicios con nbviewer
 
 * [Ejericio 1](https://nbviewer.jupyter.org/github/fgs222/ME1/blob/main/TP/TP1/Ej_1.ipynb)
 
