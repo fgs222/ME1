@@ -22,12 +22,54 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
+import java.util.ArrayList;
+import static java.lang.Math.sqrt;
+
 public class MainActivity extends AppCompatActivity {
 
     private RequestQueue queue; //Es una cola donde van los request que voy haciendo (libreria volley)
     private String[] BufferNames ;      // Almacena el employee_name
     private String[] BufferTension ;    // Almacena el employee_salary
     private String[] BufferCorriente ;  // Almacena el employee_age
+
+
+
+
+
+
+    // Defino los buffers, potencia de 2 para mas placer y por la FFT
+    private int POW_FREC_SHOW = 10;
+    private int POW_TIME_SHOW = 8;
+    private int POW_FFT_BUFFER = 16;
+
+    private int BUFFER_SIZE_SHOW_FREQ = (int) Math.pow(2,POW_FREC_SHOW);
+    private int BUFFER_SIZE_SHOW_TIME = (int) Math.pow(2,POW_TIME_SHOW);
+    private int BUFFER_SIZE = (int) Math.pow(2,POW_FFT_BUFFER);
+
+    // Buffer donde sale el valor crudo
+    short[] buffer = new short[BUFFER_SIZE];
+//
+double[] buffer_double = new double[BUFFER_SIZE];
+
+
+
+    // Contador de tiempo de ejecucion
+    private double time_exe = 0.0;
+    //---------------------------------------------------------------------------------------
+    //-------------------------- NATIVE Cpp -------------------------------------------------
+    //---------------------------------------------------------------------------------------
+    // Cargo la libreria en C nativo "signal_proces-lib.so" (la que hicimos acá)
+    static
+    {
+        System.loadLibrary("signal_proces-lib");
+    }
+
+    // Delcaro las funciones que voy a utilizar de la libreria
+    private native String getNativeString(); // Esta funcion esta contenida en la libreria
+    private native double[] calcularFFT(short[] input, int elementos);
+
+
 
     Spinner SpinnerNames;               // Spinner con nombres del BufferName
     TextView ViewTension;               // TextView con valores de BufferTension
@@ -95,6 +137,8 @@ public class MainActivity extends AppCompatActivity {
 
                     }
 
+
+
                 } catch (JSONException e) {
                     e.printStackTrace();
 
@@ -107,9 +151,32 @@ public class MainActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.d("Mensaje", String.valueOf(error));
             }
+
         });
 
         queue.add(request);
     }
+    private void fft() {   //Nuevo metodo con logica para obtener json
 
+        long startTime = System.currentTimeMillis();
+
+        // Calculo FFT en la libreria de C
+        buffer_double = calcularFFT(buffer, BUFFER_SIZE);
+
+        time_exe = System.currentTimeMillis() - startTime;
+        // Actualizo el tiempo de calculo
+
+        // obtenemos el modulo y mostramos en el grafico de FFT
+        int buffer_mod_count = 0;
+        for (int i = 0; i < BUFFER_SIZE_SHOW_FREQ; i++)
+        {
+            // calculamos el modulo
+            double aux_mod = sqrt(buffer_double[buffer_mod_count]*buffer_double[buffer_mod_count] + buffer_double[buffer_mod_count+1]*buffer_double[buffer_mod_count+1]);
+
+            // Adelantamos el index del buffer con un paso grande, submuestreando la salida real
+            // asi no colgamos el grafico con muchos puntos.
+            buffer_mod_count += 2^(POW_FFT_BUFFER-POW_FREC_SHOW);
+
+        }
+    }
 }
