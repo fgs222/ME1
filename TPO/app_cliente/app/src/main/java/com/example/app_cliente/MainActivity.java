@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private int BUFFER_SIZE = (int) Math.pow(2,POW_FFT_BUFFER);
 
     // Buffer donde sale el valor crudo
-    short[] buffer = new short[BUFFER_SIZE];
+   short[] buffer = new short[BUFFER_SIZE];
 //
 double[] buffer_double = new double[BUFFER_SIZE];
 
@@ -60,10 +60,10 @@ double[] buffer_double = new double[BUFFER_SIZE];
     //-------------------------- NATIVE Cpp -------------------------------------------------
     //---------------------------------------------------------------------------------------
     // Cargo la libreria en C nativo "signal_proces-lib.so" (la que hicimos acá)
-    static
+    /*static
     {
-        System.loadLibrary("signal_proces-lib");
-    }
+        System.loadLibrary("signal_proces_lib");
+    }*/
 
     // Delcaro las funciones que voy a utilizar de la libreria
     private native String getNativeString(); // Esta funcion esta contenida en la libreria
