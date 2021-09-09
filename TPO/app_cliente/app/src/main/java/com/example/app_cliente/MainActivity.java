@@ -33,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private String[] BufferTension ;    // Almacena el employee_salary
     private String[] BufferCorriente ;  // Almacena el employee_age
 
-
+    private int[] BufferTension_int ;    // Almacena el employee_salary
+    private int[] BufferCorriente_int ;  // Almacena el employee_age
 
 
 
@@ -105,6 +106,9 @@ double[] buffer_double = new double[BUFFER_SIZE];
                     BufferTension = new String[myJsonArray.length()];
                     BufferCorriente = new String[myJsonArray.length()];
 
+                    BufferTension_int = new int[myJsonArray.length()];
+                    BufferCorriente_int = new int[myJsonArray.length()];
+
                     ArrayAdapter<String> adapter = new ArrayAdapter<>( getApplicationContext(), android.R.layout.simple_spinner_item, BufferNames );    // hace magia
                     adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );       // mas magia por aca
                     SpinnerNames.setAdapter( adapter );     // linkea la magia al spinner
@@ -130,7 +134,8 @@ double[] buffer_double = new double[BUFFER_SIZE];
                         BufferNames[i] = name;
                         BufferTension[i] = salary;
                         BufferCorriente[i] = age;
-
+                        BufferTension_int[i] = Integer.parseInt(salary);
+                       BufferCorriente_int[i] =Integer.parseInt(age);
                         Log.d("Mensaje", name);
 
                         Toast.makeText(MainActivity.this,"Nombre:"+name,Toast.LENGTH_SHORT).show();
@@ -155,13 +160,13 @@ double[] buffer_double = new double[BUFFER_SIZE];
         });
 
         queue.add(request);
-    }
+    }/*
     private void fft() {   //Nuevo metodo con logica para obtener json
 
         long startTime = System.currentTimeMillis();
 
         // Calculo FFT en la libreria de C
-        buffer_double = calcularFFT(buffer, BUFFER_SIZE);
+        buffer_double = calcularFFT(BufferCorriente_short, BUFFER_SIZE);
 
         time_exe = System.currentTimeMillis() - startTime;
         // Actualizo el tiempo de calculo
@@ -178,5 +183,5 @@ double[] buffer_double = new double[BUFFER_SIZE];
             buffer_mod_count += 2^(POW_FFT_BUFFER-POW_FREC_SHOW);
 
         }
-    }
+    }*/
 }
