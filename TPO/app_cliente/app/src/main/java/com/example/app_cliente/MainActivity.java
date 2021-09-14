@@ -9,7 +9,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -177,7 +176,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void mathematicalOperations(){
-
         operations.setCurrentMeanValue(operations.meanValue(BufferCorriente_int));
         operations.setVoltageMeanValue(operations.meanValue(BufferTension_int));
         operations.setCurrentRmsValue(operations.rmsValue(BufferCorriente_int));
@@ -186,6 +184,5 @@ public class MainActivity extends AppCompatActivity {
         Log.d("Potencia activa", operations.activePowerValue() +"W");
 
         Log.d("Potencia aparente", operations.apparentPower(BufferTension_int, BufferCorriente_int) +"VA");
-
     }
 }
