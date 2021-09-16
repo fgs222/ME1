@@ -2,12 +2,15 @@ package com.example.app_cliente;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -20,7 +23,6 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 
 import java.util.ArrayList;
 import static java.lang.Math.sqrt;
@@ -65,22 +67,31 @@ public class MainActivity extends AppCompatActivity {
     private native String getNativeString(); // Esta funcion esta contenida en la libreria
     private native double[] calcularFFT(short[] input, int elementos);
 
-    Spinner SpinnerNames;               // Spinner con nombres del BufferName
-    TextView ViewTension;               // TextView con valores de BufferTension
-    TextView ViewCorriente;             // TextView con valores de BufferCorriente
+    //-----------------Interfaz-----------------//
+    Button showPlotButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SpinnerNames = findViewById( R.id.spinner_name );         // linkea con el id del xml
-        ViewTension = findViewById( R.id.tension_datos );
-        ViewCorriente = findViewById( R.id.corriente_datos );
-
         queue = Volley.newRequestQueue(this);   //inicializo la queue
-
         obtenerDatosVolley();
+
+        showPlotButton = (Button)findViewById(R.id.button_plot);
+        showPlotButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                // Intents are objects of the android.content.Intent type. Your code can send them
+                // to the Android system defining the components you are targeting.
+                // Intent to start an activity called SecondActivity with the following code:
+
+                Intent intent = new Intent(MainActivity.this, PlotActivity.class);
+
+                // start the activity connect to the specified class
+                startActivity(intent);
+            }
+        });
     }
 
     private void obtenerDatosVolley(){   //Nuevo metodo con logica para obtener json
@@ -100,31 +111,12 @@ public class MainActivity extends AppCompatActivity {
                     BufferTension_int = new int[myJsonArray.length()];
                     BufferCorriente_int = new int[myJsonArray.length()];
 
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>( getApplicationContext(), android.R.layout.simple_spinner_item, bufferNames.getBuffer() );    // hace magia
-                    adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );       // mas magia por aca
-                    SpinnerNames.setAdapter( adapter );     // linkea la magia al spinner
-                    SpinnerNames.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            ViewTension.setText( bufferTension.getBufferValue(position) );
-                            ViewCorriente.setText( bufferCorriente.getBufferValue(position) );
-                        }
-
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {
-
-                        }
-                    });
-
                     for( int i = 0; i < myJsonArray.length(); i++ ) {
                         JSONObject myJsonObject = myJsonArray.getJSONObject(i);
                         String name = myJsonObject.getString("employee_name");
                         String age = myJsonObject.getString("employee_age");
                         String salary = myJsonObject.getString("employee_salary");
 
-                        bufferNames.SetBufferValue( i, name );
-                        bufferTension.SetBufferValue( i, salary );
-                        bufferCorriente.SetBufferValue( i, age );
                         BufferTension_int[i] = Integer.parseInt(salary);
                         BufferCorriente_int[i] = Integer.parseInt(age);
                     }
