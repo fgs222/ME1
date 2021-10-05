@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,8 +26,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
-import static java.lang.Math.sqrt;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
     private RequestQueue queue;         //Es una cola donde van los request que voy haciendo (libreria volley)
@@ -36,36 +40,9 @@ public class MainActivity extends AppCompatActivity {
     private Buffer bufferTension = new Buffer();     // Almacena el employee_salary
     private Buffer bufferCorriente = new Buffer();   // Almacena el employee_age
 
-    private int[] BufferTension_int;    // Almacena el employee_salary
-    private int[] BufferCorriente_int;  // Almacena el employee_age
-
-    // Defino los buffers, potencia de 2 para mas placer y por la FFT
-    private int POW_FREC_SHOW = 10;
-    private int POW_TIME_SHOW = 8;
-    private int POW_FFT_BUFFER = 16;
-
-    private int BUFFER_SIZE_SHOW_FREQ = (int) Math.pow(2,POW_FREC_SHOW);
-    private int BUFFER_SIZE_SHOW_TIME = (int) Math.pow(2,POW_TIME_SHOW);
-    private int BUFFER_SIZE = (int) Math.pow(2,POW_FFT_BUFFER);
-
-    // Buffer donde sale el valor crudo
-    short[] buffer = new short[BUFFER_SIZE];
-    double[] buffer_double = new double[BUFFER_SIZE];
-
-    // Contador de tiempo de ejecucion
-    private double time_exe = 0.0;
-    //---------------------------------------------------------------------------------------
-    //-------------------------- NATIVE Cpp -------------------------------------------------
-    //---------------------------------------------------------------------------------------
-    // Cargo la libreria en C nativo "signal_proces-lib.so" (la que hicimos acá)
-    /*static
-    {
-        System.loadLibrary("signal_proces_lib");
-    }*/
-
-    // Delcaro las funciones que voy a utilizar de la libreria
-    private native String getNativeString(); // Esta funcion esta contenida en la libreria
-    private native double[] calcularFFT(short[] input, int elementos);
+    private TextView textVef;
+    private TextView textIef;
+    private TextView textPot;
 
     //-----------------Interfaz-----------------//
     Button showPlotButton;
@@ -75,8 +52,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        textVef = (TextView) findViewById(R.id.displayVef);
+        textIef = (TextView) findViewById(R.id.displayIef);
+        //textPot = (TextView) findViewById(R.id.displayPot);
+
         queue = Volley.newRequestQueue(this);   //inicializo la queue
-        obtenerDatosVolley();
+
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                obtenerDatosVolley();
+                actualizarDisplay();
+            }
+        }, 0, 500);//put here time 500 milliseconds = 0.5 second
+
 
         showPlotButton = (Button)findViewById(R.id.button_plot);
         showPlotButton.setOnClickListener(new View.OnClickListener() {
@@ -108,23 +97,20 @@ public class MainActivity extends AppCompatActivity {
 
                     initializeBuffers( myJsonArray.length() );
 
-                    BufferTension_int = new int[myJsonArray.length()];
-                    BufferCorriente_int = new int[myJsonArray.length()];
-
                     for( int i = 0; i < myJsonArray.length(); i++ ) {
-                        JSONObject myJsonObject = myJsonArray.getJSONObject(i);
-                        String name = myJsonObject.getString("employee_name");
-                        String age = myJsonObject.getString("employee_age");
-                        String salary = myJsonObject.getString("employee_salary");
-
-                        BufferTension_int[i] = Integer.parseInt(salary);
-                        BufferCorriente_int[i] = Integer.parseInt(age);
+                        //JSONObject myJsonObject = myJsonArray.getJSONObject(i);
+                        //String name = myJsonObject.getString("employee_name");
+                        //String age = myJsonObject.getString("employee_age");
+                        //String salary = myJsonObject.getString("employee_salary");
+                        bufferCorriente.SetBufferValue(i, 1);
+                        bufferTension.SetBufferValue(i, 1);
                     }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                mathematicalOperations();
+
+                //mathematicalOperations();
             }
         },
             new Response.ErrorListener() {
@@ -136,30 +122,21 @@ public class MainActivity extends AppCompatActivity {
         queue.add(request);
     }
 
-    /*
-    private void fft() {   //Nuevo metodo con logica para obtener json
+    private void actualizarDisplay() {
+        mathematicalOperations();
 
-        long startTime = System.currentTimeMillis();
+        new Handler(Looper.getMainLooper()).post(new Runnable(){
+            @Override
+            public void run() {
+                TextView textPot= (TextView) findViewById(R.id.displayPot);
+                textPot.setText( Double.toString( operations.activePowerValue() ) + " W" );
+            }
+        });
 
-        // Calculo FFT en la libreria de C
-        buffer_double = calcularFFT(BufferCorriente_short, BUFFER_SIZE);
-
-        time_exe = System.currentTimeMillis() - startTime;
-        // Actualizo el tiempo de calculo
-
-        // obtenemos el modulo y mostramos en el grafico de FFT
-        int buffer_mod_count = 0;
-        for (int i = 0; i < BUFFER_SIZE_SHOW_FREQ; i++)
-        {
-            // calculamos el modulo
-            double aux_mod = sqrt(buffer_double[buffer_mod_count]*buffer_double[buffer_mod_count] + buffer_double[buffer_mod_count+1]*buffer_double[buffer_mod_count+1]);
-
-            // Adelantamos el index del buffer con un paso grande, submuestreando la salida real
-            // asi no colgamos el grafico con muchos puntos.
-            buffer_mod_count += 2^(POW_FFT_BUFFER-POW_FREC_SHOW);
-
-        }
-    }*/
+        //textVef.setText( Double.toString( operations.getVoltageRmsValue() ) );
+        //textIef.setText( Double.toString( operations.getCurrentRmsValue() ) );
+        //textPot.setText( Double.toString( operations.activePowerValue() ) );
+    }
 
     private void initializeBuffers( int bufferSize ){
         bufferNames.SetBuffer( bufferSize );
@@ -168,13 +145,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void mathematicalOperations(){
-        operations.setCurrentMeanValue(operations.meanValue(BufferCorriente_int));
-        operations.setVoltageMeanValue(operations.meanValue(BufferTension_int));
-        operations.setCurrentRmsValue(operations.rmsValue(BufferCorriente_int));
-        operations.setVoltageRmsValue(operations.rmsValue(BufferTension_int));
+        operations.setCurrentMeanValue(operations.meanValue(bufferCorriente.asInt()));
+        operations.setVoltageMeanValue(operations.meanValue(bufferTension.asInt()));
+        operations.setCurrentRmsValue(operations.rmsValue(bufferCorriente.asInt()));
+        operations.setVoltageRmsValue(operations.rmsValue(bufferTension.asInt()));
 
         Log.d("Potencia activa", operations.activePowerValue() +"W");
 
-        Log.d("Potencia aparente", operations.apparentPower(BufferTension_int, BufferCorriente_int) +"VA");
+        Log.d("Potencia aparente", operations.apparentPower(bufferTension.asInt(), bufferCorriente.asInt()) +"VA");
     }
 }

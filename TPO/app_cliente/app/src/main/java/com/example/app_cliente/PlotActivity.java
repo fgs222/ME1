@@ -33,8 +33,8 @@ public class PlotActivity extends AppCompatActivity {
         plot = findViewById(R.id.plot);
 
         // Turn the above arrays into XYSeries
-        //XYSeries series1 = new SimpleXYSeries(series1Numbers);
-        //        SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,"Series 1");
+        // XYSeries series1 = new SimpleXYSeries(series1Numbers);
+        // SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,"Series 1");
         XYSeries series1 = new SimpleXYSeries(Arrays.asList(series1Numbers),
                 SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,"Series 1");
 

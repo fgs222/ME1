@@ -12,31 +12,24 @@
 
 using namespace std;
 
-inline void FFT(short int dir,long m,double *x,double *y);
-
+inline void FFT( short int dir, long m, double *x, double *y );
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_example_app_1cliente_MainActivity_getNativeString(JNIEnv *env, jobject obj) {
+Java_com_example_app_1cliente_Fft_getNativeString( JNIEnv *env, jobject obj ) {
     cout << "Libreria en C++ nativo funcionando!" << endl;
 
     return env->NewStringUTF("Libreria en C++ nativo funcionando!");
 }
 
-
-
-
 extern "C"
 JNIEXPORT jdoubleArray JNICALL
-Java_com_example_app_1cliente_MainActivity_calcularFFT(JNIEnv *env, jobject obj, jshortArray entrada,
-                                                       jint elementos) {
-
+Java_com_example_app_1cliente_Fft_calcularFFT( JNIEnv *env, jobject obj, jshortArray entrada,
+                                                       jint elementos ) {
     //First get a pointer to the elements within the jshortArray
     jsize len = env->GetArrayLength(entrada);
     jboolean isCopy1;
     jshort *entrada_short = env->GetShortArrayElements(entrada, &isCopy1);
-
-
 
     // Entrada en double
     double* val_real=NULL;
@@ -50,7 +43,6 @@ Java_com_example_app_1cliente_MainActivity_calcularFFT(JNIEnv *env, jobject obj,
 
     // Calculo la FFT
     Fft_transform(val_real, val_img, elementos);
-
 
     // Declaro la salida
     double* out_fft=NULL;
@@ -66,12 +58,8 @@ Java_com_example_app_1cliente_MainActivity_calcularFFT(JNIEnv *env, jobject obj,
         out_count++;
     }
 
-
-
-
     jdoubleArray output = env->NewDoubleArray( elementos );
     env->SetDoubleArrayRegion( output, 0, elementos, &out_fft[0] );
-
 
     return output;
 }

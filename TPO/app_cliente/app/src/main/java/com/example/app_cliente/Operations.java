@@ -4,10 +4,12 @@ import android.util.Log;
 
 public class Operations {
 
-    private double currentMeanValue;
-    private double voltageMeanValue;
-    private double currentRmsValue;
-    private double voltageRmsValue;
+    private double currentMeanValue = 0.0;
+    private double voltageMeanValue = 0.0;
+    private double currentRmsValue = 0.0;
+    private double voltageRmsValue = 0.0;
+    private double activePowerValue = 0.0;
+
 
     public double getCurrentMeanValue(){return currentMeanValue;}
     public double getVoltageMeanValue(){return voltageMeanValue;}
@@ -49,11 +51,9 @@ public class Operations {
 
     public double activePowerValue(){
 
-        double activePower=0;
+        this.activePowerValue = currentRmsValue * voltageRmsValue;
 
-        activePower = currentRmsValue * voltageRmsValue;
-
-        return activePower;
+        return this.activePowerValue;
     }
 
     public double apparentPower(int[] voltage, int[] current){
