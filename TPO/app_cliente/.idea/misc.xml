@@ -4,8 +4,17 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/franc/Desktop/UTN/4to/ME1/app_cliente/app/src/main/res/layout/activity_main.xml" value="0.4" />
-        <entry key="..\:/Users/franc/Documents/GitHub/ME1/TPO/app_cliente/app/src/main/res/layout/activity_main.xml" value="0.4" />
+        <entry key="..\:/Users/franc/Documents/GitHub/ME1/TPO/app_cliente/app/src/main/res/drawable/ic_settings.xml" value="0.2703125" />
+        <entry key="..\:/Users/franc/Documents/GitHub/ME1/TPO/app_cliente/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/Users/franc/Documents/GitHub/ME1/TPO/app_cliente/app/src/main/res/layout/activity_main2.xml" value="0.1802536231884058" />
         <entry key="..\:/Users/franc/Documents/GitHub/ME1/TPO/app_cliente/app/src/main/res/layout/activity_plot.xml" value="0.176" />
+        <entry key="..\:/Users/franc/Documents/GitHub/ME1/TPO/app_cliente/app/src/main/res/layout/activity_settings.xml" value="0.18568840579710144" />
+        <entry key="..\:/Users/franc/Documents/GitHub/ME1/TPO/app_cliente/app/src/main/res/layout/fragment_chat.xml" value="0.1408514492753623" />
+        <entry key="..\:/Users/franc/Documents/GitHub/ME1/TPO/app_cliente/app/src/main/res/layout/fragment_message.xml" value="0.264" />
+        <entry key="..\:/Users/franc/Documents/GitHub/ME1/TPO/app_cliente/app/src/main/res/layout/fragment_profile.xml" value="0.1408514492753623" />
+        <entry key="..\:/Users/franc/Documents/GitHub/ME1/TPO/app_cliente/app/src/main/res/layout/nav_header.xml" value="0.15353260869565216" />
+        <entry key="..\:/Users/franc/Documents/GitHub/ME1/TPO/app_cliente/app/src/main/res/menu/drawer_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/franc/Documents/GitHub/ME1/TPO/app_cliente/app/src/main/res/menu/settings_menu.xml" value="0.23125" />
       </map>
     </option>
   </component>
