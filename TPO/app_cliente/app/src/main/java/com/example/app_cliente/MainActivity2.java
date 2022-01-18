@@ -2,6 +2,7 @@ package com.example.app_cliente;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -11,10 +12,29 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity2 extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
+    private RequestQueue queue;         //Es una cola donde van los request que voy haciendo (libreria volley)
+
+    private int[] arrayTension;      //Aca deberiamos usar number o float
+    private int[] arrayCorriente;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +55,57 @@ public class MainActivity2 extends AppCompatActivity implements NavigationView.O
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new MessageFragment()).commit();
+                    new ConsumoFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_charge);
         }
+
+        queue = Volley.newRequestQueue(this);   //inicializo la queue
+
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                obtenerDatosVolley();
+            }
+        }, 0, 300);//put here time 1000 milliseconds = 1 second
+    }
+
+    private void obtenerDatosVolley(){   //Nuevo metodo con logica para obtener json
+        String url = "http://192.168.1.239";
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                int i = 0;
+
+                try {
+                    JSONArray myJsonArray = response.getJSONArray("data");
+                    int jsonLength = myJsonArray.length();
+                    arrayCorriente = new int[jsonLength];
+                    arrayTension = new int[jsonLength];
+
+                    for( i = 0; i < myJsonArray.length(); i++ ) {
+                        JSONObject myJsonObject = myJsonArray.getJSONObject(i);
+                        int tension = myJsonObject.getInt("tension");
+                        int corriente = myJsonObject.getInt("corriente");   // Aca deberiamos usar number o float
+
+                        arrayTension[i] = tension;
+                        arrayCorriente[i] = corriente;
+                    }
+                    //actualizarDisplay();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                i=0;
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("Mensaje", String.valueOf(error));
+                    }
+                });
+        queue.add(request); // Esto es del volley
     }
 
     @Override
@@ -45,7 +113,7 @@ public class MainActivity2 extends AppCompatActivity implements NavigationView.O
         switch (item.getItemId()) {
             case R.id.nav_charge:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new MessageFragment()).commit();
+                        new ConsumoFragment()).commit();
                 break;
             case R.id.nav_chat:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,

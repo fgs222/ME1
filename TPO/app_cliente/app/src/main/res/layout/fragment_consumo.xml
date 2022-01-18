@@ -6,7 +6,29 @@
 
 
     <TextView
+        android:id="@+id/textIef"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="280dp"
+        android:layout_marginLeft="280dp"
+        android:layout_marginTop="290dp"
+        android:text="TextView"
+        android:textColor="#000000"
+        android:textSize="24sp" />
+
+    <TextView
         android:id="@+id/textVef"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="280dp"
+        android:layout_marginLeft="280dp"
+        android:layout_marginTop="230dp"
+        android:text="TextView"
+        android:textColor="#000000"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/textVefH"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="40dp"
@@ -17,7 +39,7 @@
         android:textSize="24sp" />
 
     <TextView
-        android:id="@+id/textIef"
+        android:id="@+id/textIefH"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="40dp"
@@ -28,13 +50,24 @@
         android:textSize="24sp" />
 
     <TextView
-        android:id="@+id/textPot"
+        android:id="@+id/textPotH"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="40dp"
         android:layout_marginTop="350dp"
         android:fontFamily="@font/asap"
         android:text="Potencia Eficaz:"
+        android:textColor="#000000"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/textPot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="280dp"
+        android:layout_marginLeft="280dp"
+        android:layout_marginTop="350dp"
+        android:text="TextView"
         android:textColor="#000000"
         android:textSize="24sp" />
 
